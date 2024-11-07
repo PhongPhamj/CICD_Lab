@@ -21,7 +21,7 @@ pipeline {
                 sh 'chmod +x mvnw'
                 sh 'ls -la'
                 dir('CICD_Lab') {
-                    sh 'mvnw install -DskipTests=true'
+                    sh './mvnw install -DskipTests=true'
                  }
             }
         }
