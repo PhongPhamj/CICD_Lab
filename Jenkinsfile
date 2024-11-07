@@ -19,10 +19,11 @@ pipeline {
         stage('build') {
             steps {
                 sh 'chmod +x mvnw'
+                sh 'pwd'
                 sh 'ls -la'
-                dir('CICD_Lab') {
-                    sh './mvnw install -DskipTests=true'
-                 }
+                // dir('CICD_Lab') {
+                sh './mvnw install -DskipTests=true'
+                 // }
             }
         }
 
