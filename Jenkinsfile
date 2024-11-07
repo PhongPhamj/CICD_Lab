@@ -20,7 +20,7 @@ pipeline {
         //         archiveArtifacts '**/build/libs/*.jar'
         //         junit '**/build/test-results/test/*.xml'
         //         // Configure Jacoco for code coverage
-        //         jacoco(execPattern: '**/build/jacoco/*.exec')
+        //         jacoco(execPattern: '**/build/jacoco/*.exec'))
         //     }
         // }
     }
