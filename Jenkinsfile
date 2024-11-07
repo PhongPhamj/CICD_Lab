@@ -33,10 +33,10 @@ pipeline {
     }
 
     post {
-        always {
-            // Clean up workspace
-            cleanWs()
-        }
+        // always {
+        //     // Clean up workspace
+        //     cleanWs()
+        // }
 
         success {
             // Notify on success
