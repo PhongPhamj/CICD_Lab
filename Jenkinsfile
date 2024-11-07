@@ -2,16 +2,6 @@ pipeline {
     agent any
 
     stages {
-
-        // stage('checkout') {
-        //     steps {
-        //         git branch: 'main', 
-        //             credentialsId: 'github-ssh-key', 
-        //             url: 'git@github.com:PhongPhamj/CICD_Lab.git'
-        //     }
-        // }
-
-        stages {
         stage('checkout') {
             steps {
                 // Checkout the 'dev' branch from the private GitHub repository
@@ -32,12 +22,12 @@ pipeline {
             }
         }
 
+        // Optional capture stage
         // stage('capture') {
         //     steps {
         //         archiveArtifacts '**/build/libs/*.jar'
         //         junit '**/build/test-results/test/*.xml'
-        //         // Configure Jacoco for code coverage
-        //         jacoco(execPattern: '**/build/jacoco/*.exec'))
+        //         jacoco(execPattern: '**/build/jacoco/*.exec')
         //     }
         // }
     }
