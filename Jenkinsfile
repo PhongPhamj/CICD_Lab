@@ -3,9 +3,26 @@ pipeline {
 
     stages {
 
+        // stage('checkout') {
+        //     steps {
+        //         git branch: 'main', 
+        //             credentialsId: 'github-ssh-key', 
+        //             url: 'git@github.com:PhongPhamj/CICD_Lab.git'
+        //     }
+        // }
+
+        stages {
         stage('checkout') {
             steps {
-                git branch: 'main', credentialsId: 'github-ssh-key', url: 'git@github.com:PhongPhamj/CICD_Lab.git'
+                // Checkout the 'dev' branch from the private GitHub repository
+                checkout([
+                    $class: 'GitSCM', 
+                    branches: [[name: 'dev']], // Specify 'dev' branch
+                    userRemoteConfigs: [[
+                        url: 'git@github.com:PhongPhamj/CICD_Lab.git', // SSH URL of the repository
+                        credentialsId: 'github-ssh-key' // Jenkins credential ID for SSH key
+                    ]]
+                ])
             }
         }
 
