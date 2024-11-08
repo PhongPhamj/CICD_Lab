@@ -50,7 +50,13 @@ pipeline {
                 steps {
                     dependencyCheck additionalArguments: '--scan ./target/', odcInstallation: 'owasp'
                     dependencyCheckPublisher pattern: '**/dependency-check-report.xml'
-                    }
+                }
+        }
+
+        stage('UT + package') {
+            steps {
+                sh './mvnw clean package'
+            }
         }
 
         stage('Code Scan') {
@@ -61,12 +67,6 @@ pipeline {
                     -Dsonar.java.binaries=target/ \
                     -Dsonar.projectName=CICD-Lab \
                     -Dsonar.projectKey=CICD-Lab '''
-                    }
-                }
-
-        stage('UT + package') {
-            steps {
-                sh './mvnw clean package'
             }
         }
     }
