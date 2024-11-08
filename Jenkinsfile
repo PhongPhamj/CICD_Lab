@@ -14,8 +14,8 @@ pipeline {
                 //         credentialsId: 'github-ssh-key' // Jenkins credential ID for SSH key
                 //     ]]
                 // ])
-                git branch: 'main', 
-                    credentialsId: 'github-ssh-key', 
+                git branch: 'main',
+                    credentialsId: 'github-ssh-key',
                     url: 'git@github.com:PhongPhamj/CICD_Lab.git'
             }
         }
@@ -47,15 +47,25 @@ pipeline {
         // }
 
         stage('Dependency Check') {
-                    steps {
-                        dependencyCheck additionalArguments: '--scan ./target/', odcInstallation: 'owasp'
-                        dependencyCheckPublisher pattern: '**/dependency-check-report.xml'
+                steps {
+                    dependencyCheck additionalArguments: '--scan ./target/', odcInstallation: 'owasp'
+                    dependencyCheckPublisher pattern: '**/dependency-check-report.xml'
+                    }
+        }
+
+        stage('Code Scan') {
+            steps {
+                    sh ''' ./mvnw sonar:sonar \
+                    -Dsonar.host.url=http://3.27.32.114:9000/ \
+                    -Dsonar.login=squ_326f9df19a5fa0d11644bc817357b918a969a230 \
+                    -Dsonar.java.binaries=target/ \
+                    -Dsonar.projectName=CICD-Lab \
+                    -Dsonar.projectKey=CICD-Lab '''
                     }
                 }
 
         stage('UT + package') {
             steps {
-                sh 'chmod +x mvnw'
                 sh './mvnw clean package'
             }
         }
