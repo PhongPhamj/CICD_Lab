@@ -29,7 +29,7 @@ pipeline {
                 sh './mvnw clean package'
             }
         }
-        
+
         stage('Code Analysis') {
             parallel {
                 stage('Dependency Check') {
@@ -53,12 +53,7 @@ pipeline {
         stage('Quality Gate') {
             steps {
                 script {
-                    qualityGate = waitForQualityGate()
-                    if (qualityGate.status != 'OK') {
-                        error 'Pipeline aborted due to quality gate failure'
-                    } else {
-                        echo 'Quality gate passed'
-                    }
+                    waitForQualityGate abortPipeline: true
                 }
             }
         }
