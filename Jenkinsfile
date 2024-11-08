@@ -41,7 +41,7 @@ pipeline {
                 stage('Code Scan') {
                     steps {
                         script {
-                            withSonarQubeEnv('SonarQube') {
+                            withSonarQubeEnv('EC2SonarQube') {
                                 sh ' ./mvnw sonar:sonar '
                             }
                         }
