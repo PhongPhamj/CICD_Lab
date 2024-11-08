@@ -30,8 +30,8 @@ pipeline {
             }
         }
 
-        stage('Quality Analysis') {
-            parallel {
+        // stage('Quality Analysis') {
+        //     parallel {
                 stage('Dependency Check') {
                     steps {
                         dependencyCheck additionalArguments: '--scan ./target/', odcInstallation: 'owasp'
@@ -49,8 +49,8 @@ pipeline {
                     -Dsonar.projectKey=CICD-Lab '''
                     }
                 }
-            }
-        }
+        //     }
+        // }
 
         stage('Quality Gate') {
             steps {
