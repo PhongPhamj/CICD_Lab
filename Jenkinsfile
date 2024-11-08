@@ -29,31 +29,26 @@ pipeline {
                 sh './mvnw clean package'
             }
         }
-
+        
+        stage('Code Analysis') {
+            parallel {
                 stage('Dependency Check') {
                     steps {
                         dependencyCheck additionalArguments: '--scan ./target/', odcInstallation: 'owasp'
                         dependencyCheckPublisher pattern: '**/dependency-check-report.xml'
                     }
                 }
-
                 stage('Code Scan') {
                     steps {
-                        //must have withSonarQubeEnv for the quality gate to work
                         script {
                             withSonarQubeEnv('SonarQube') {
-                                // sh ''' ./mvnw sonar:sonar \
-                                // -Dsonar.host.url=http://3.27.32.114:9000/ \
-                                // -Dsonar.login=squ_326f9df19a5fa0d11644bc817357b918a969a230 \
-                                // -Dsonar.java.binaries=target/ \
-                                // -Dsonar.projectName=CICD-Lab \
-                                // -Dsonar.projectKey=CICD-Lab '''
-
                                 sh ' ./mvnw sonar:sonar '
                             }
                         }
                     }
                 }
+            }
+        }
 
         stage('Quality Gate') {
             steps {
