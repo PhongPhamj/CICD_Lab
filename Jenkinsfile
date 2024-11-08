@@ -53,7 +53,7 @@ pipeline {
                     }
                 }
 
-        stage('build+UT') {
+        stage('UT + package') {
             steps {
                 sh 'chmod +x mvnw'
                 sh './mvnw clean package'
