@@ -58,6 +58,8 @@ pipeline {
                     def qualityGate = waitForQualityGate()
                     if (qualityGate.status != 'OK') {
                         error 'Pipeline aborted due to quality gate failure'
+                    } else {
+                        echo 'Quality gate passed'
                     }
                 }
             }
