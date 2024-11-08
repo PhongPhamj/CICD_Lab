@@ -23,7 +23,7 @@ pipeline {
             }
         }
 
-        stage('build') {
+        stage('build & UT') {
             steps {
                 sh 'chmod +x mvnw'
                 sh './mvnw clean package'
@@ -51,13 +51,21 @@ pipeline {
                 }
             }
         }
+
+        stage('Quality Gate') {
+            steps {
+                timeout(time: 1, unit: 'MINUTES') {
+                    waitForQualityGate abortPipeline: true
+                }
+            }
+        }
     }
 
     post {
-        always {
-            // Clean up workspace
-            cleanWs()
-        }
+        // always {
+        //     // Clean up workspace
+        //     cleanWs()
+        // }
 
         success {
             // Notify on success
