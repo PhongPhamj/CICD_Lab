@@ -10,8 +10,8 @@ pipeline {
         GIT_COMMIT = sh(returnStdout: true, script: 'git rev-parse --short=10 HEAD').trim()
         DOCKER_HUB_USERNAME = 'phonqpham'
         DOCKER_HUB_TOKEN = credentials('dockerhub-accesstoken')
-        REPO_NAME = 'CICD-Lab'
-        USER_REPO = 'phonqpham/CICD-Lab'
+        REPO_NAME = 'cicd-lab'
+        USER_REPO = 'phonqpham/cicd-lab'
     }
 
     stages {
