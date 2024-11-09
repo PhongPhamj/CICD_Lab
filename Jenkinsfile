@@ -58,10 +58,14 @@ pipeline {
         stage('Build Image') {
             steps {
                 sh 'echo "start building"'
-                sh 'sudo groupadd docker'
-                sh 'sudo gpasswd -a ubuntu docker'
+                sh '''
+                if ! getent group docker > /dev/null 2>&1; then
+                    sudo groupadd docker
+                fi
+                '''
+                sh 'sudo usermod -aG docker ubuntu'
                 script {
-                    withDockerRegistry(credentialsId: 'docker-credentials', toolName: 'jenkins-docker') {
+                    withDockerRegistry(credentialsId: 'docker-credentials', toolName: 'jenkins-docker', url: 'https://index.docker.io/v1/') {
                         sh 'docker build -t local-image .'
                         sh "docker tag local-image ${DOCKER_HUB_USERNAME}/${REPO_NAME}:latest ${DOCKER_HUB_USERNAME}/${REPO_NAME}:${GIT_COMMIT}"
                     }
