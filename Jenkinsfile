@@ -58,6 +58,7 @@ pipeline {
         stage('Build Image') {
             steps {
                 sh 'echo "start building"'
+                sh 'sudo groupadd docker'
                 sh 'sudo gpasswd -a ubuntu docker'
                 script {
                     withDockerRegistry(credentialsId: 'docker-credentials', toolName: 'jenkins-docker') {
