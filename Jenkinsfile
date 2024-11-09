@@ -60,13 +60,13 @@ pipeline {
 
         stage('Build Image') {
             steps {
-                sh 'echo "start building"'
-                sh '''
-                if ! getent group docker > /dev/null 2>&1; then
-                    sudo groupadd docker
-                fi
-                '''
-                sh 'sudo usermod -aG docker ubuntu'
+                // sh 'echo "start building"'
+                // sh '''
+                // if ! getent group docker > /dev/null 2>&1; then
+                //     sudo groupadd docker
+                // fi
+                // '''
+                // sh 'sudo usermod -aG docker ubuntu'
                 script {
                     withDockerRegistry(credentialsId: 'docker-credentials', toolName: 'jenkins-docker', url: 'https://index.docker.io/v1/') {
                         sh 'docker build -t local-image .'
