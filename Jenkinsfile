@@ -69,8 +69,7 @@ pipeline {
         // stage('Scan Image') {
         // }
 
-        stages {
-            stage('Check Repository Existence and Create if Not Exists') {
+            stage('Create Docker Hub Repo') {
                 steps {
                     script {
                         // Check if the repository exists
@@ -105,7 +104,6 @@ pipeline {
                     }
                 }
             }
-        }
 
         stage('Push Image') {
             steps {
