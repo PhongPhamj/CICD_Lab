@@ -1,8 +1,11 @@
 /* groovylint-disable NestedBlockDepth */
 pipeline {
-    agent {
-        label 'quality-check'
-    }
+    // agent {
+    //     label 'quality-check'
+    // }
+
+    agent any
+
     environment {
         GIT_COMMIT = sh(returnStdout: true, script: 'git rev-parse --short=10 HEAD').trim()
         DOCKER_HUB_USERNAME = 'phonqpham'
