@@ -89,12 +89,12 @@ pipeline {
                         if (checkRepo == '404') {
                             // Repository does not exist, so create it
                             createRepo = sh(
-                            script: """
+                            script: '''
                                 curl -X POST https://hub.docker.com/v2/repositories/$DOCKER_HUB_USERNAME/$REPO_NAME/ \
                                 -H "Authorization: Bearer $DOCKER_HUB_TOKEN" \
                                 -H "Content-Type: application/json" \
                                 -d '{ "name": "$REPO_NAME", "is_private": true }'
-                            """,
+                            ''',
                             returnStatus: true
                         )
 
