@@ -66,8 +66,8 @@ pipeline {
             }
         }
 
-        stage('Scan Image') {
-        }
+        // stage('Scan Image') {
+        // }
 
         stages {
             stage('Check Repository Existence and Create if Not Exists') {
