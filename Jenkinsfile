@@ -64,7 +64,7 @@ pipeline {
                 script {
                     withDockerRegistry(credentialsId: 'docker-credentials', toolName: 'jenkins-docker', url: 'https://index.docker.io/v1/') {
                         sh 'docker build -t local-image .'
-                        sh "docker tag local-image ${DOCKER_HUB_USERNAME}/${REPO_NAME}:latest ${DOCKER_HUB_USERNAME}/${REPO_NAME}:${GIT_COMMIT}"
+                        sh "docker tag local-image ${DOCKER_HUB_USERNAME}/${REPO_NAME}:latest -t ${DOCKER_HUB_USERNAME}/${REPO_NAME}:${GIT_COMMIT}"
                     }
                 }
             }
