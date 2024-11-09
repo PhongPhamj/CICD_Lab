@@ -58,6 +58,7 @@ pipeline {
         stage('Build Image') {
             steps {
                 sh 'echo "start building"'
+                sh 'sudo gpasswd -a jenkins docker'
                 script {
                     withDockerRegistry(credentialsId: 'docker-credentials', toolName: 'jenkins-docker') {
                         sh 'docker build -t local-image .'
