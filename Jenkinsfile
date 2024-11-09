@@ -108,9 +108,13 @@ pipeline {
         }
 
         stage('Push Image') {
-            withDockerRegistry(credentialsId: 'docker-credentials', toolName: 'jenkins-docker') {
-                sh "docker push ${DOCKER_HUB_USERNAME}/${REPO_NAME}:latest"
-                sh "docker push ${DOCKER_HUB_USERNAME}/${REPO_NAME}:${GIT_COMMIT}"
+            steps {
+                script {
+                    withDockerRegistry(credentialsId: 'docker-credentials', toolName: 'jenkins-docker') {
+                        sh "docker push ${DOCKER_HUB_USERNAME}/${REPO_NAME}:latest"
+                        sh "docker push ${DOCKER_HUB_USERNAME}/${REPO_NAME}:${GIT_COMMIT}"
+                    }
+                }
             }
         }
     }
