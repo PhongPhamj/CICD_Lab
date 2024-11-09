@@ -81,7 +81,7 @@ pipeline {
                         checkRepo = sh(
                         script: """
                             curl -s -o /dev/null -w "%{http_code}" \
-                            -H "Authorization: Bearer ${DOCKER_HUB_TOKEN}" \
+                            -H "Authorization: Bearer $DOCKER_HUB_TOKEN" \
                             https://hub.docker.com/v2/repositories/${DOCKER_HUB_USERNAME}/${REPO_NAME}/
                         """,
                         returnStdout: true
