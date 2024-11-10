@@ -73,7 +73,7 @@ pipeline {
 
         stage('Scan Image') {
             steps {
-                    sh "trivy image ${DOCKER_HUB_USERNAME}/${REPO_NAME}:latest"
+                    sh "trivy image --no-progress --severity HIGH,CRITICAL ${DOCKER_HUB_USERNAME}/${REPO_NAME}:latest"
                 }
             }
 
