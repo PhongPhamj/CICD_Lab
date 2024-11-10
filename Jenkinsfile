@@ -43,11 +43,18 @@ pipeline {
                         dependencyCheckPublisher pattern: '**/dependency-check-report.json'
 
                         script {
-                            reportFile = 'dependency-check-report/dependency-check-report.json'
-                            jsonReport = readJSON file: reportFile
-                            criticalVulns = jsonReport.vulnerabilities.findAll { vuln -> vuln.severity == 'Critical' }
-                            highVulns = jsonReport.vulnerabilities.findAll { vuln -> vuln.severity == 'High' }
+                            // Path to the generated JSON report
+                            def reportFile = 'dependency-check-report/dependency-check-report.json'
 
+                            // Read the JSON file content
+                            def jsonReport = readFile(file: reportFile)
+                            def json = new groovy.json.JsonSlurper().parseText(jsonReport)
+
+                            // Find all vulnerabilities with "High" or "Critical" severity
+                            def criticalVulns = json.vulnerabilities.findAll { it.severity == 'Critical' }
+                            def highVulns = json.vulnerabilities.findAll { it.severity == 'High' }
+
+                            // If any critical or high vulnerabilities are found, fail the build
                             if (criticalVulns.size() > 0 || highVulns.size() > 0) {
                                 error 'Build failed due to high or critical vulnerabilities!'
                             }
