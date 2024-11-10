@@ -44,7 +44,7 @@ pipeline {
 
                         script {
                             xmlReport = readFile('dependency-check-report.xml')
-                            xml = new XmlSlurper().parseText(xmlReport)
+                            def xml = new XmlParser().parseText(xmlReport)
                             vulnerabilities = xml.'**'.findAll { it.name() == 'vulnerability' }
                             vulnerabilities.each { vulnerability ->
                             echo "Vulnerability ID: ${vulnerability.'@id'}"
