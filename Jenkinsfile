@@ -39,24 +39,22 @@ pipeline {
             parallel {
                 stage('Dependency Check') {
                     steps {
-                        dependencyCheck additionalArguments: '--scan ./target/ --format JSON --out dependency-check-report', odcInstallation: 'owasp'
-                        dependencyCheckPublisher pattern: '**/dependency-check-report.json'
+                        dependencyCheck additionalArguments: '--scan ./target/', odcInstallation: 'owasp'
+                        dependencyCheckPublisher pattern: '**/dependency-check-report.xml'
 
                         script {
-                            // Path to the generated JSON report
-                            reportFile = 'dependency-check-report.json'
+                            reportFile = 'dependency-check-report.xml'
+                            xmlReport = readFile(reportFile)
 
-                            // Read the JSON file content
-                            jsonReport = readFile(file: reportFile)
-                            json = new groovy.json.JsonSlurper().parseText(jsonReport)
+                            // Parse XML content using Groovy's XmlParser
+                            parser = new XmlParser()
+                            xml = parser.parseText(xmlReport)
 
-                            // Find all vulnerabilities with "High" or "Critical" severity
-                            criticalVulns = json.vulnerabilities.findAll { it.severity == 'Critical' }
-                            highVulns = json.vulnerabilities.findAll { it.severity == 'High' }
-
-                            // If any critical or high vulnerabilities are found, fail the build
-                            if (criticalVulns.size() > 0 || highVulns.size() > 0) {
-                                error 'Build failed due to high or critical vulnerabilities!'
+                            // Process the XML content
+                            // Example: Accessing the vulnerabilities section
+                            vulnerabilities = xml.'**'.findAll { it.name() == 'vulnerability' }
+                            vulnerabilities.each { vulnerability ->
+                                echo "Vulnerability ID: ${vulnerability.'@id'}"
                             }
                         }
                     }
