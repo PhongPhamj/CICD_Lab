@@ -41,6 +41,15 @@ pipeline {
                     steps {
                         dependencyCheck additionalArguments: '--scan ./target/', odcInstallation: 'owasp'
                         dependencyCheckPublisher pattern: '**/dependency-check-report.xml'
+
+                        script {
+                            reportFile = 'dependency-check-report.xml'
+                            vulnerabilities = parseReport(reportFile)
+                            highOrCritical = vulnerabilities.findAll { it.severity == 'High' || it.severity == 'Critical' }
+                            if (highOrCritical.size() == 0) {
+                                error 'High or critical vulnerabilities found. Build failed.'
+                            }
+                        }
                     }
                 }
                 stage('Code Scan') {
@@ -106,27 +115,27 @@ pipeline {
         //                     returnStatus: true
         //                 )
 
-        //                 if (createRepo != 0) {
-        //                     error('Failed to create Docker Hub private repository.')
-        //                 } else {
-        //                     echo "Created repository ${DOCKER_HUB_USERNAME}/${REPO_NAME} on Docker Hub."
-        //                 }
-        //             }else {
-        //                 echo 'Repository found'
-        //             }
-        //         }
-        //     }
-        // }
-        // stage('Push Image') {
-        //     steps {
-        //         script {
-        //             withDockerRegistry(credentialsId: 'docker-credentials', toolName: 'jenkins-docker') {
-        //                 sh "docker push ${DOCKER_HUB_USERNAME}/${REPO_NAME}:latest"
-        //                 sh "docker push ${DOCKER_HUB_USERNAME}/${REPO_NAME}:${GIT_COMMIT}"
-        //             }
-        //         }
-        //     }
-        // }
+    //                 if (createRepo != 0) {
+    //                     error('Failed to create Docker Hub private repository.')
+    //                 } else {
+    //                     echo "Created repository ${DOCKER_HUB_USERNAME}/${REPO_NAME} on Docker Hub."
+    //                 }
+    //             }else {
+    //                 echo 'Repository found'
+    //             }
+    //         }
+    //     }
+    // }
+    // stage('Push Image') {
+    //     steps {
+    //         script {
+    //             withDockerRegistry(credentialsId: 'docker-credentials', toolName: 'jenkins-docker') {
+    //                 sh "docker push ${DOCKER_HUB_USERNAME}/${REPO_NAME}:latest"
+    //                 sh "docker push ${DOCKER_HUB_USERNAME}/${REPO_NAME}:${GIT_COMMIT}"
+    //             }
+    //         }
+    //     }
+    // }
     }
 
     post {
@@ -136,13 +145,13 @@ pipeline {
 
         success {
             slackSend(channel: '#cicd', color: 'good'
-            , message: "Job '${REPO_NAME} [${GIT_COMMIT}]' succeeded. Started at: ${startTime}.\n"+
+            , message: "Job '${REPO_NAME} [${GIT_COMMIT}]' succeeded. Started at: ${startTime}.\n" +
             "SonarQube Analysis can be found at: ${SONARQUBE_ANALYSIS_URL}.")
         }
 
         failure {
             slackSend(channel: '#cicd', color: 'danger'
-            , message: "Job '${REPO_NAME} [${GIT_COMMIT}]' failed. Started at: ${startTime}.\n"+
+            , message: "Job '${REPO_NAME} [${GIT_COMMIT}]' failed. Started at: ${startTime}.\n" +
             "SonarQube Analysis can be found at: ${SONARQUBE_ANALYSIS_URL}.")
         }
     }
