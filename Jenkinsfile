@@ -46,7 +46,7 @@ pipeline {
                             reportFile = 'dependency-check-report.xml'
                             vulnerabilities = parseReport(reportFile)
                             highOrCritical = vulnerabilities.findAll { it.severity == 'High' || it.severity == 'Critical' }
-                            if (highOrCritical.size() == 0) {
+                            if (highOrCritical.size() > 0) {
                                 error 'High or critical vulnerabilities found. Build failed.'
                             }
                         }
