@@ -22,7 +22,7 @@ pipeline {
                 }
                 git branch: 'main',
                 credentialsId: 'github-ssh-key',
-                url: 'git@github.com:PhongPhamj/CICD_Lab.gitt'
+                url: 'git@github.com:PhongPhamj/CICD_Lab.git'
             }
         }
 
@@ -135,11 +135,11 @@ pipeline {
         }
 
         success {
-            slackSend(channel: '#cicd', color: 'good', message: "Job '${REPO_NAME} [${GIT_COMMIT}]' succeeded. Started at: ${startTime}.")
+            slackSend(channel: '#cicd', color: 'good', message: "Job '${REPO_NAME} [${GIT_COMMIT}]' succeeded. Started at: ${startTime}. SonarQube Quality Gate: ${sonarStatus}.")
         }
 
         failure {
-            slackSend(channel: '#cicd', color: 'danger', message: "Job '${REPO_NAME} [${GIT_COMMIT}]' failed. Started at: ${startTime}.")
+            slackSend(channel: '#cicd', color: 'danger', message: "Job '${REPO_NAME} [${GIT_COMMIT}]' failed. Started at: ${startTime}. SonarQube Quality Gate: ${sonarStatus}.")
         }
     }
 }
