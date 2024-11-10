@@ -81,12 +81,11 @@ pipeline {
 
         stage('Scan Image') {
             steps {
-                sh "trivy image --no-progress --exit-code 1 --severity HIGH,CRITICAL ${DOCKER_HUB_USERNAME}/${REPO_NAME}:latest"
-            }
-            post {
-                failure {
-                    script {
+                script {
+                    def scanResult = sh(script: "trivy image --no-progress --exit-code 1 --severity HIGH,CRITICAL ${DOCKER_HUB_USERNAME}/${REPO_NAME}:latest", returnStatus: true)
+                    if (scanResult != 0) {
                         env.FAILURE_MESSAGE = 'Trivy scan failed due to high or critical vulnerabilities.'
+                        error 'Trivy scan failed.'
                     }
                 }
             }
@@ -158,7 +157,7 @@ pipeline {
 
         failure {
             // Notify on failure
-            echo "Build failed!, Error occured: + $FAILURE_MESSAGE"
+            echo "Build failed!, Error occured: ${FAILURE_MESSAGE}"
         }
     }
 }
