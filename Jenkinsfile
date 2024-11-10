@@ -129,10 +129,10 @@ pipeline {
     }
 
     post {
-        always {
-            // Clean up workspace
-            // cleanWs()
-        }
+        // always {
+        //     // Clean up workspace
+        //     // cleanWs()
+        // }
 
         success {
             slackSend(channel: '#cicd', color: 'good', message: "Job '${REPO_NAME} [${GIT_COMMIT}]' succeeded. Started at: ${startTime}. SonarQube Quality Gate: ${sonarStatus}.")
