@@ -127,23 +127,17 @@ pipeline {
 
     post {
         always {
+            slackSend(channel: '#cicd', color: 'good', message: "Job '${REPO_NAME} [${GIT_COMMIT}]' succeeded.")
             // Clean up workspace
             cleanWs()
         }
 
         success {
-            // Notify on success
-            echo 'Build successful!'
-        }
-
-        unstable {
-            // Notify on unstable build
-            echo 'Build unstable.'
+            slackSend(channel: '#cicd', color: 'good', message: "Job '${REPO_NAME} [${GIT_COMMIT}]' succeeded.")
         }
 
         failure {
-            // Notify on failure
-            echo "Build failed!"
+            slackSend(channel: '#cicd', color: 'danger', message: "Job '${REPO_NAME} [${GIT_COMMIT}]' failed.")
         }
     }
 }
