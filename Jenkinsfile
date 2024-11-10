@@ -17,6 +17,8 @@ pipeline {
     stages {
         stage('Checkout') {
             steps {
+                startTime = new Date(currentBuild.startTimeInMillis).format('yyyy-MM-dd HH:mm:ss', TimeZone.getTimeZone('UTC'))
+
                 git branch: 'main',
                 credentialsId: 'github-ssh-key',
                 url: 'git@github.com:PhongPhamj/CICD_Lab.git'
@@ -133,11 +135,11 @@ pipeline {
 
         success {
             sh 'echo "Build succeeded"'
-            slackSend(channel: '#cicd', color: 'good', message: "Job '${REPO_NAME} [${GIT_COMMIT}]' succeeded.")
+            slackSend(channel: '#cicd', color: 'good', message: "Job '${REPO_NAME} [${GIT_COMMIT}]' succeeded. Started at: ${startTime}.")
         }
 
         failure {
-            slackSend(channel: '#cicd', color: 'danger', message: "Job '${REPO_NAME} [${GIT_COMMIT}]' failed.")
+            slackSend(channel: '#cicd', color: 'danger', message: "Job '${REPO_NAME} [${GIT_COMMIT}]' failed. Started at: ${startTime}.")
         }
     }
 }
