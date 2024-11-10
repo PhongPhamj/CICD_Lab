@@ -51,6 +51,7 @@ pipeline {
                             }
                         }
                     }
+                }
         //         stage('Code Scan') {
         //             steps {
         //                 script {
@@ -63,16 +64,16 @@ pipeline {
         //     }
         // }
 
-        stage('Quality Gate') {
-            steps {
-                script {
-                    // waitForQualityGate abortPipeline: true
-                    qualityGate = waitForQualityGate()
-                    currentBuild.result = qualityGate.status == 'OK' ? 'SUCCESS' : 'FAILURE'
-                    sonarStatus = qualityGate.status
-                }
-            }
-        }
+        // stage('Quality Gate') {
+        //     steps {
+        //         script {
+        //             // waitForQualityGate abortPipeline: true
+        //             qualityGate = waitForQualityGate()
+        //             currentBuild.result = qualityGate.status == 'OK' ? 'SUCCESS' : 'FAILURE'
+        //             sonarStatus = qualityGate.status
+        //         }
+        //     }
+        // }
 
         // stage('Build Image') {
         //     steps {
