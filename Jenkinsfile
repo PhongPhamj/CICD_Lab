@@ -35,8 +35,8 @@ pipeline {
             }
         }
 
-        stage('Code Analysis') {
-            parallel {
+        // stage('Code Analysis') {
+        //     parallel {
                 stage('Dependency Check') {
                     steps {
                         dependencyCheck additionalArguments: '--scan ./target/', odcInstallation: 'owasp'
@@ -59,17 +59,17 @@ pipeline {
                         }
                     }
                 }
-                stage('Code Scan') {
-                    steps {
-                        script {
-                            withSonarQubeEnv('EC2SonarQube') {
-                                sh ' ./mvnw sonar:sonar '
-                            }
-                        }
-                    }
-                }
-            }
-        }
+        //         stage('Code Scan') {
+        //             steps {
+        //                 script {
+        //                     withSonarQubeEnv('EC2SonarQube') {
+        //                         sh ' ./mvnw sonar:sonar '
+        //                     }
+        //                 }
+        //             }
+        //         }
+        //     }
+        // }
 
         stage('Quality Gate') {
             steps {
