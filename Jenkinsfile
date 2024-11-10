@@ -39,10 +39,11 @@ pipeline {
             parallel {
                 stage('Dependency Check') {
                     steps {
-                        dependencyCheck additionalArguments: '--scan ./target/', odcInstallation: 'owasp'
+                        dependencyCheck additionalArguments: '--scan ./target/ --format JSON', odcInstallation: 'owasp',
                         dependencyCheckPublisher pattern: '**/dependency-check-report.json'
 
                         script {
+                            sh 'ls -la'
                             // Path to the generated JSON report
                             reportFile = 'dependency-check-report/dependency-check-report.json'
 
