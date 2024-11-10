@@ -39,7 +39,7 @@ pipeline {
             parallel {
                 stage('Dependency Check') {
                     steps {
-                        dependencyCheck additionalArguments: '--scan ./target/ --format JSON', odcInstallation: 'owasp'
+                        dependencyCheck additionalArguments: '--scan ./target/ --format JSON --out dependency-check-report', odcInstallation: 'owasp'
                         dependencyCheckPublisher pattern: '**/dependency-check-report.json'
 
                         script {
