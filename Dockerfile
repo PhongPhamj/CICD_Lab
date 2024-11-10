@@ -7,12 +7,12 @@
 # EXPOSE 8070
 # ENTRYPOINT exec java -jar app.jar
 
-FROM openjdk:17-jdk-slim AS build
+FROM eclipse-temurin:17-jdk-alpine AS build
 WORKDIR /app
 COPY . /app
 RUN ./mvnw clean package -DskipTests
 
-FROM openjdk:17-jdk-slim
+FROM eclipse-temurin:17-jdk-alpine
 WORKDIR /app
 COPY --from=build /app/target/*.jar app.jar
 EXPOSE 8070
