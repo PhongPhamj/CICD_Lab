@@ -12,6 +12,7 @@ pipeline {
         DOCKER_HUB_TOKEN = credentials('dockerhub-accesstoken')
         REPO_NAME = 'cicd-lab'
         USER_REPO = 'phonqpham/cicd-lab'
+        FAILURE_MESSAGE = 'Build failed'
     }
 
     stages {
@@ -57,6 +58,11 @@ pipeline {
         //             waitForQualityGate abortPipeline: true
         //         }
         //     }
+        //     post {
+        //         failure {
+        //             env.FAILURE_MESSAGE = 'Sonarqube scan failed to pass quality gate.'
+        //         }
+        //     }
         // }
 
         stage('Build Image') {
@@ -73,9 +79,14 @@ pipeline {
 
         stage('Scan Image') {
             steps {
-                    sh "trivy image --no-progress --severity HIGH,CRITICAL ${DOCKER_HUB_USERNAME}/${REPO_NAME}:latest"
+                sh "trivy image --no-progress --exit-code 1 --severity HIGH,CRITICAL ${DOCKER_HUB_USERNAME}/${REPO_NAME}:latest"
+            }
+            post {
+                failure {
+                    env.FAILURE_MESSAGE = 'Trivy scan failed due to high or critical vulnerabilities.'
                 }
             }
+        }
 
         stage('Create Docker Hub Repo') {
             steps {
@@ -143,7 +154,7 @@ pipeline {
 
         failure {
             // Notify on failure
-            echo 'Build failed!'
+            echo 'Build failed!, Error occured: + $FAILURE_MESSAGE'
         }
     }
 }
