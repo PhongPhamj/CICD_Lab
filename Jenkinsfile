@@ -60,7 +60,9 @@ pipeline {
         //     }
         //     post {
         //         failure {
-        //             env.FAILURE_MESSAGE = 'Sonarqube scan failed to pass quality gate.'
+        //             script {
+        //                 env.FAILURE_MESSAGE = 'Sonarqube scan failed to pass quality gate.'
+        //             }
         //         }
         //     }
         // }
@@ -83,7 +85,9 @@ pipeline {
             }
             post {
                 failure {
-                    env.FAILURE_MESSAGE = 'Trivy scan failed due to high or critical vulnerabilities.'
+                    script {
+                        env.FAILURE_MESSAGE = 'Trivy scan failed due to high or critical vulnerabilities.'
+                    }
                 }
             }
         }
@@ -137,10 +141,10 @@ pipeline {
     }
 
     post {
-        // always {
-        //     // Clean up workspace
-        //     cleanWs()
-        // }
+        always {
+            // Clean up workspace
+            cleanWs()
+        }
 
         success {
             // Notify on success
