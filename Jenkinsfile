@@ -17,8 +17,9 @@ pipeline {
     stages {
         stage('Checkout') {
             steps {
-                startTime = new Date(currentBuild.startTimeInMillis).format('yyyy-MM-dd HH:mm:ss', TimeZone.getTimeZone('UTC'))
-
+                script {
+                    startTime = new Date(currentBuild.startTimeInMillis).format('yyyy-MM-dd HH:mm:ss', TimeZone.getTimeZone('UTC'))
+                }
                 git branch: 'main',
                 credentialsId: 'github-ssh-key',
                 url: 'git@github.com:PhongPhamj/CICD_Lab.git'
