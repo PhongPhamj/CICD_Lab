@@ -12,6 +12,7 @@ pipeline {
         DOCKER_HUB_TOKEN = credentials('dockerhub-accesstoken')
         REPO_NAME = 'cicd-lab'
         USER_REPO = 'phonqpham/cicd-lab'
+        SONARQUBE_ANALYSIS_URL = 'http://13.210.206.84:9000/dashboard?id=com.example%3AbackendCICD'
     }
 
     stages {
@@ -39,7 +40,7 @@ pipeline {
                 stage('Dependency Check') {
                     steps {
                         dependencyCheck additionalArguments: '--scan ./target/', odcInstallation: 'owasp'
-                        dependencyCheckPublisher pattern: '**/dependency-check-report.xml'
+                        dependencyCheckPublisher pattern: '**/dependency-check-report.html'
                     }
                 }
                 stage('Code Scan') {
@@ -129,17 +130,20 @@ pipeline {
     }
 
     post {
-        // always {
-        //     // Clean up workspace
-        //     // cleanWs()
-        // }
+        always {
+            // cleanWs()
+        }
 
         success {
-            slackSend(channel: '#cicd', color: 'good', message: "Job '${REPO_NAME} [${GIT_COMMIT}]' succeeded. Started at: ${startTime}. SonarQube Quality Gate: ${sonarStatus}.")
+            slackSend(channel: '#cicd', color: 'good'
+            , message: "Job '${REPO_NAME} [${GIT_COMMIT}]' succeeded. Started at: ${startTime}.\n"+
+            "SonarQube Analysis can be found at: ${SONARQUBE_ANALYSIS_URL}.")
         }
 
         failure {
-            slackSend(channel: '#cicd', color: 'danger', message: "Job '${REPO_NAME} [${GIT_COMMIT}]' failed. Started at: ${startTime}. SonarQube Quality Gate: ${sonarStatus}.")
+            slackSend(channel: '#cicd', color: 'danger'
+            , message: "Job '${REPO_NAME} [${GIT_COMMIT}]' failed. Started at: ${startTime}.\n"+
+            "SonarQube Analysis can be found at: ${SONARQUBE_ANALYSIS_URL}.")
         }
     }
 }
