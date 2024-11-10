@@ -27,7 +27,7 @@ pipeline {
             steps {
                 sh 'chmod +x mvnw'
                 sh './mvnw clean package'
-                // sh './mvnw install -DskipTests=true'
+            // sh './mvnw install -DskipTests=true'
             }
         }
 
@@ -71,24 +71,27 @@ pipeline {
             }
         }
 
-        // stage('Scan Image') {
-        // }
+        stage('Scan Image') {
+            steps {
+                    sh "trivy image ${DOCKER_HUB_USERNAME}/${REPO_NAME}:latest"
+                }
+            }
 
-            stage('Create Docker Hub Repo') {
-                steps {
-                    script {
-                        // Check if the repository exists
-                        checkRepo = sh(
-                        script: '''
-                            curl -s -o /dev/null -w "%{http_code}" \
-                            -H "Authorization: Bearer $DOCKER_HUB_TOKEN" \
-                            https://hub.docker.com/v2/repositories/$DOCKER_HUB_USERNAME/$REPO_NAME/
-                        ''',
-                        returnStdout: true
+        stage('Create Docker Hub Repo') {
+            steps {
+                script {
+                    // Check if the repository exists
+                    checkRepo = sh(
+                    script: '''
+                        curl -s -o /dev/null -w "%{http_code}" \
+                        -H "Authorization: Bearer $DOCKER_HUB_TOKEN" \
+                        https://hub.docker.com/v2/repositories/$DOCKER_HUB_USERNAME/$REPO_NAME/
+                    ''',
+                    returnStdout: true
                     ).trim()
-                        if (checkRepo == '404') {
-                            // Repository does not exist, so create it
-                            createRepo = sh(
+                    if (checkRepo == '404') {
+                        // Repository does not exist, so create it
+                        createRepo = sh(
                             script: '''
                                 curl -X POST https://hub.docker.com/v2/repositories/$DOCKER_HUB_USERNAME/$REPO_NAME/ \
                                 -H "Authorization: Bearer $DOCKER_HUB_TOKEN" \
@@ -98,17 +101,17 @@ pipeline {
                             returnStatus: true
                         )
 
-                            if (createRepo != 0) {
-                                error('Failed to create Docker Hub private repository.')
+                        if (createRepo != 0) {
+                            error('Failed to create Docker Hub private repository.')
                         } else {
-                                echo "Created repository ${DOCKER_HUB_USERNAME}/${REPO_NAME} on Docker Hub."
-                            }
-                        }else{
-                            echo "Repository found"
+                            echo "Created repository ${DOCKER_HUB_USERNAME}/${REPO_NAME} on Docker Hub."
                         }
+                    }else {
+                        echo 'Repository found'
                     }
                 }
             }
+        }
 
         stage('Push Image') {
             steps {
