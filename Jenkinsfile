@@ -127,12 +127,12 @@ pipeline {
 
     post {
         always {
-            slackSend(channel: '#cicd', color: 'good', message: "Job '${REPO_NAME} [${GIT_COMMIT}]' succeeded.")
             // Clean up workspace
             cleanWs()
         }
 
         success {
+            sh 'echo "Build succeeded"'
             slackSend(channel: '#cicd', color: 'good', message: "Job '${REPO_NAME} [${GIT_COMMIT}]' succeeded.")
         }
 
