@@ -35,30 +35,22 @@ pipeline {
             }
         }
 
-        // stage('Code Analysis') {
-        //     parallel {
+                // stage('Code Analysis') {
+                //     parallel {
                 stage('Dependency Check') {
                     steps {
                         dependencyCheck additionalArguments: '--scan ./target/', odcInstallation: 'owasp'
                         dependencyCheckPublisher pattern: '**/dependency-check-report.xml'
 
                         script {
-                            reportFile = 'dependency-check-report.xml'
-                            xmlReport = readFile(reportFile)
-
-                            // Parse XML content using Groovy's XmlParser
-                            parser = new XmlParser()
-                            xml = parser.parseText(xmlReport)
-
-                            // Process the XML content
-                            // Example: Accessing the vulnerabilities section
+                            xmlReport = readFile('dependency-check-report.xml')
+                            xml = new XmlParser().parseText(xmlReport)
                             vulnerabilities = xml.'**'.findAll { it.name() == 'vulnerability' }
                             vulnerabilities.each { vulnerability ->
                                 echo "Vulnerability ID: ${vulnerability.'@id'}"
                             }
                         }
                     }
-                }
         //         stage('Code Scan') {
         //             steps {
         //                 script {
@@ -122,28 +114,28 @@ pipeline {
         //                     returnStatus: true
         //                 )
 
-    //                 if (createRepo != 0) {
-    //                     error('Failed to create Docker Hub private repository.')
-    //                 } else {
-    //                     echo "Created repository ${DOCKER_HUB_USERNAME}/${REPO_NAME} on Docker Hub."
-    //                 }
-    //             }else {
-    //                 echo 'Repository found'
-    //             }
-    //         }
-    //     }
-    // }
-    // stage('Push Image') {
-    //     steps {
-    //         script {
-    //             withDockerRegistry(credentialsId: 'docker-credentials', toolName: 'jenkins-docker') {
-    //                 sh "docker push ${DOCKER_HUB_USERNAME}/${REPO_NAME}:latest"
-    //                 sh "docker push ${DOCKER_HUB_USERNAME}/${REPO_NAME}:${GIT_COMMIT}"
-    //             }
-    //         }
-    //     }
-    // }
-    }
+        //                 if (createRepo != 0) {
+        //                     error('Failed to create Docker Hub private repository.')
+        //                 } else {
+        //                     echo "Created repository ${DOCKER_HUB_USERNAME}/${REPO_NAME} on Docker Hub."
+        //                 }
+        //             }else {
+        //                 echo 'Repository found'
+        //             }
+        //         }
+        //     }
+        // }
+        // stage('Push Image') {
+        //     steps {
+        //         script {
+        //             withDockerRegistry(credentialsId: 'docker-credentials', toolName: 'jenkins-docker') {
+        //                 sh "docker push ${DOCKER_HUB_USERNAME}/${REPO_NAME}:latest"
+        //                 sh "docker push ${DOCKER_HUB_USERNAME}/${REPO_NAME}:${GIT_COMMIT}"
+        //             }
+        //         }
+        //     }
+        // }
+        }
 
     post {
         // always {
@@ -162,4 +154,4 @@ pipeline {
             "SonarQube Analysis can be found at: ${SONARQUBE_ANALYSIS_URL}.")
         }
     }
-}
+    }
