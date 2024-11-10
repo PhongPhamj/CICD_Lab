@@ -44,10 +44,10 @@ pipeline {
 
                         script {
                             xmlReport = readFile('dependency-check-report.xml')
-                            xml = new XmlParser().parseText(xmlReport)
+                            xml = new XmlSlurper().parseText(xmlReport)
                             vulnerabilities = xml.'**'.findAll { it.name() == 'vulnerability' }
                             vulnerabilities.each { vulnerability ->
-                                echo "Vulnerability ID: ${vulnerability.'@id'}"
+                            echo "Vulnerability ID: ${vulnerability.'@id'}"
                             }
                         }
                     }
@@ -115,28 +115,28 @@ pipeline {
         //                     returnStatus: true
         //                 )
 
-        //                 if (createRepo != 0) {
-        //                     error('Failed to create Docker Hub private repository.')
-        //                 } else {
-        //                     echo "Created repository ${DOCKER_HUB_USERNAME}/${REPO_NAME} on Docker Hub."
-        //                 }
-        //             }else {
-        //                 echo 'Repository found'
-        //             }
-        //         }
-        //     }
-        // }
-        // stage('Push Image') {
-        //     steps {
-        //         script {
-        //             withDockerRegistry(credentialsId: 'docker-credentials', toolName: 'jenkins-docker') {
-        //                 sh "docker push ${DOCKER_HUB_USERNAME}/${REPO_NAME}:latest"
-        //                 sh "docker push ${DOCKER_HUB_USERNAME}/${REPO_NAME}:${GIT_COMMIT}"
-        //             }
-        //         }
-        //     }
-        // }
-        }
+    //                 if (createRepo != 0) {
+    //                     error('Failed to create Docker Hub private repository.')
+    //                 } else {
+    //                     echo "Created repository ${DOCKER_HUB_USERNAME}/${REPO_NAME} on Docker Hub."
+    //                 }
+    //             }else {
+    //                 echo 'Repository found'
+    //             }
+    //         }
+    //     }
+    // }
+    // stage('Push Image') {
+    //     steps {
+    //         script {
+    //             withDockerRegistry(credentialsId: 'docker-credentials', toolName: 'jenkins-docker') {
+    //                 sh "docker push ${DOCKER_HUB_USERNAME}/${REPO_NAME}:latest"
+    //                 sh "docker push ${DOCKER_HUB_USERNAME}/${REPO_NAME}:${GIT_COMMIT}"
+    //             }
+    //         }
+    //     }
+    // }
+    }
 
     post {
         // always {
@@ -155,4 +155,4 @@ pipeline {
             "SonarQube Analysis can be found at: ${SONARQUBE_ANALYSIS_URL}.")
         }
     }
-    }
+}
