@@ -135,12 +135,10 @@ pipeline {
         }
 
         success {
-            sh 'echo "Build succeeded"' //ko có 1 dòng khác là nó ko gửi message 
             slackSend(channel: '#cicd', color: 'good', message: "Job '${REPO_NAME} [${GIT_COMMIT}]' succeeded. Started at: ${startTime}.")
         }
 
         failure {
-            sh 'echo "Build failed"'
             slackSend(channel: '#cicd', color: 'danger', message: "Job '${REPO_NAME} [${GIT_COMMIT}]' failed. Started at: ${startTime}.")
         }
     }
