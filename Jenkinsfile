@@ -75,11 +75,6 @@ pipeline {
             steps {
                 sh "trivy image --no-progress --exit-code 1 --severity HIGH,CRITICAL ${DOCKER_HUB_USERNAME}/${REPO_NAME}:latest"
             }
-            post {
-                failure {
-                    echo 'Trivy scan failed due to high or critical vulnerabilities.'
-                }
-            }
         }
 
         stage('Create Docker Hub Repo') {
