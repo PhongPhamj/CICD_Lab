@@ -47,8 +47,8 @@ pipeline {
                             xmlReport = readFile(reportFile)
 
                             // Parse XML content using Groovy's XmlParser
-                            slurper = new XmlSlurper()
-                            xml = slurper.parseText(xmlReport)
+                            parser = new XmlParser()
+                            xml = parser.parseText(xmlReport)
 
                             // Process the XML content
                             // Example: Accessing the vulnerabilities section
