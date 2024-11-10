@@ -140,6 +140,7 @@ pipeline {
         }
 
         failure {
+            sh 'echo "Build failed"'
             slackSend(channel: '#cicd', color: 'danger', message: "Job '${REPO_NAME} [${GIT_COMMIT}]' failed. Started at: ${startTime}.")
         }
     }
