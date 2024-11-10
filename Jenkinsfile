@@ -44,7 +44,7 @@ pipeline {
 
                         script {
                             // Path to the generated JSON report
-                            reportFile = 'dependency-check-report.json'
+                            reportFile = 'dependency-check-report/dependency-check-report.json'
 
                             // Read the JSON file content
                             jsonReport = readFile(file: reportFile)
@@ -148,9 +148,9 @@ pipeline {
     }
 
     post {
-        always {
-            cleanWs()
-        }
+        // always {
+        //     cleanWs()
+        // }
 
         success {
             slackSend(channel: '#cicd', color: 'good'
