@@ -157,7 +157,7 @@ pipeline {
 
         failure {
             // Notify on failure
-            echo "Build failed!, Error occured: ${FAILURE_MESSAGE}"
+            echo "Build failed!, Error occured: ${env.FAILURE_MESSAGE}"
         }
     }
 }
