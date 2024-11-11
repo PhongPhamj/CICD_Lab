@@ -60,6 +60,13 @@ pipeline {
                         withAWS(credentials: 'AWS-user', region: 'ap-southeast-2') {
                             s3Upload(bucket: 'jenkins-analysis-reports', path:"jenkins/${GIT_COMMIT}/dependency-check.xml",  file: 'dependency-check-report.xml')
                         }
+
+                        script {
+                            // waitForQualityGate abortPipeline: true
+                            qualityGate = waitForQualityGate()
+                            currentBuild.result = qualityGate.status == 'OK' ? 'SUCCESS' : 'FAILURE'
+                            sonarStatus = qualityGate.status
+                        }
                     }
                 }
                 stage('Code Scan') {
@@ -73,16 +80,16 @@ pipeline {
                 }
             }
         }
-        stage('Quality Gate') {
-            steps {
-                script {
-                    // waitForQualityGate abortPipeline: true
-                    qualityGate = waitForQualityGate()
-                    currentBuild.result = qualityGate.status == 'OK' ? 'SUCCESS' : 'FAILURE'
-                    sonarStatus = qualityGate.status
-                }
-            }
-        }
+        // stage('Quality Gate') {
+        //     steps {
+        //         script {
+        //             // waitForQualityGate abortPipeline: true
+        //             qualityGate = waitForQualityGate()
+        //             currentBuild.result = qualityGate.status == 'OK' ? 'SUCCESS' : 'FAILURE'
+        //             sonarStatus = qualityGate.status
+        //         }
+        //     }
+        // }
 /******************************************************************************
  *CREATE DOCKER IMAGE*
  ******************************************************************************/
