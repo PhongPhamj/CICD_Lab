@@ -13,6 +13,7 @@ pipeline {
         REPO_NAME = 'cicd-lab'
         USER_REPO = 'phonqpham/cicd-lab'
         SONARQUBE_ANALYSIS_URL = 'http://13.210.206.84:9000/dashboard?id=com.example%3AbackendCICD'
+        S3_BASE_URL = 'https://ap-southeast-2.console.aws.amazon.com/s3/buckets/jenkins-analysis-reports?region=ap-southeast-2&bucketType=general&prefix=jenkins/'
     }
 
     stages {
@@ -152,24 +153,25 @@ pipeline {
     }
 
     post {
-        // always {
-        //     cleanWs()
-        // }
+        always {
+            cleanWs()
+        }
 
         success {
             slackSend(channel: '#cicd', color: 'good'
             , message: "Job '${REPO_NAME} [${GIT_COMMIT}]' succeeded. Started at: ${startTime}." +
             "\nCode Quality Analysis can be found at: ${SONARQUBE_ANALYSIS_URL}"+
-            "\nDependency Check Analysis can be found at: ${SONARQUBE_ANALYSIS_URL}"+
-            "\nImage Scan Analysis can be found at: ${SONARQUBE_ANALYSIS_URL}")
+            "\nDependency Check Analysis can be found at: ${S3_BASE_URL}${GIT_COMMIT}/"+
+            "\nImage Scan Analysis can be found at: ${S3_BASE_URL}${GIT_COMMIT}/")
         }
 
         failure {
             slackSend(channel: '#cicd', color: 'danger'
             , message: "Job '${REPO_NAME} [${GIT_COMMIT}]' failed. Started at: ${startTime}.\n" +
             "\nCode Quality Analysis can be found at: ${SONARQUBE_ANALYSIS_URL}."+
-            "\nDependency Cheeck Analysis can be found at: ${SONARQUBE_ANALYSIS_URL}."+
-            "\nImage Scan Analysis can be found at: ${SONARQUBE_ANALYSIS_URL}.")
+            "\nDependency Cheeck Analysis can be found at: ${S3_BASE_URL}${GIT_COMMIT}/"+
+            "\nImage Scan Analysis can be found at: ${S3_BASE_URL}${GIT_COMMIT}/")
         }
     }
 }
+
