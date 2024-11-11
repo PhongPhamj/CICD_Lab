@@ -98,7 +98,8 @@ pipeline {
         }
         stage('Scan Image') {
             steps {
-                sh "trivy image --no-progress --exit-code 1 --severity HIGH,CRITICAL ${DOCKER_HUB_USERNAME}/${REPO_NAME}:latest"
+                sh "trivy image --no-progress --exit-code 1 --severity HIGH,CRITICAL -f json -o trivy-report.json ${DOCKER_HUB_USERNAME}/${REPO_NAME}:latest"
+                s3Upload(bucket: 'jenkins-analysis-reports', path:"jenkins/${GIT_COMMIT}/image-scan.json",  file: 'trivy-report.json')
             }
         }
         stage('Create Docker Hub Repo') {
@@ -149,9 +150,9 @@ pipeline {
     }
 
     post {
-        always {
-            cleanWs()
-        }
+        // always {
+        //     cleanWs()
+        // }
 
         success {
             slackSend(channel: '#cicd', color: 'good'
