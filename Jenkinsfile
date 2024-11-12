@@ -103,6 +103,11 @@ pipeline {
                     s3Upload(bucket: 'jenkins-analysis-reports', path:"jenkins/${GIT_COMMIT}/image-scan.json",  file: 'trivy-report.json')
                 }
             }
+            post {
+                failure {
+                    sh 'docker system prune --force --all --volumes'
+                }
+            }
         }
 
         stage('Create Docker Hub Repo If not existed') {
