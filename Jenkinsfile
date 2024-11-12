@@ -80,16 +80,7 @@ pipeline {
                 }
             }
         }
-        // stage('Quality Gate') {
-        //     steps {
-        //         script {
-        //             // waitForQualityGate abortPipeline: true
-        //             qualityGate = waitForQualityGate()
-        //             currentBuild.result = qualityGate.status == 'OK' ? 'SUCCESS' : 'FAILURE'
-        //             sonarStatus = qualityGate.status
-        //         }
-        //     }
-        // }
+
 /******************************************************************************
  *CREATE DOCKER IMAGE*
  ******************************************************************************/
@@ -112,7 +103,8 @@ pipeline {
                 }
             }
         }
-        stage('Create Docker Hub Repo') {
+        
+        stage('Create Docker Hub Repo If not existed') {
             steps {
                 script {
                     // Check if the repository exists
