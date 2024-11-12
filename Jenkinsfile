@@ -21,9 +21,6 @@ pipeline {
  *CHECKOUT AND BUILD*
  ******************************************************************************/
         stage('Checkout') {
-            agent{
-                label 'culi'
-            }
             steps {
                 script {
                     startTime = new Date(currentBuild.startTimeInMillis).format('yyyy-MM-dd HH:mm:ss', TimeZone.getTimeZone('UTC'))
@@ -34,9 +31,6 @@ pipeline {
             }
         }
         stage('Build & UT') {
-            agent{
-                label 'culi'
-            }
             steps {
                 sh 'chmod +x mvnw'
                 sh './mvnw clean package'
@@ -92,9 +86,6 @@ pipeline {
  *CREATE DOCKER IMAGE*
  ******************************************************************************/
         stage('Build Image') {
-            agent{
-                label 'docker'
-            }
             steps {
                 script {
                     withDockerRegistry(credentialsId: 'docker-credentials', toolName: 'jenkins-docker', url: 'https://index.docker.io/v1/') {
@@ -106,9 +97,6 @@ pipeline {
             }
         }
         stage('Scan Image') {
-            agent{
-                label 'docker'
-            }
             steps {
                 sh "trivy image --no-progress --exit-code 1 --severity HIGH,CRITICAL -f json -o trivy-report.json ${DOCKER_HUB_USERNAME}/${REPO_NAME}:latest"
                 withAWS(credentials: 'AWS-user', region: 'ap-southeast-2') {
@@ -118,9 +106,6 @@ pipeline {
         }
 
         stage('Create Docker Hub Repo If not existed') {
-            agent{
-                label 'docker'
-            }
             steps {
                 script {
                     // Check if the repository exists
@@ -156,9 +141,6 @@ pipeline {
             }
         }
         stage('Push Image') {
-            agent{
-                label 'docker'
-            }
             steps {
                 script {
                     withDockerRegistry(credentialsId: 'docker-credentials', toolName: 'jenkins-docker') {
