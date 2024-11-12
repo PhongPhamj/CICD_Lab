@@ -98,7 +98,7 @@ pipeline {
         }
         stage('Scan Image') {
             steps {
-                withCredentials([string(credentialsId: 'GITHUB_TOKEN', variable: 'TRIVY_TOKEN')]) {
+                withCredentials([string(credentialsId: 'github-classic-token', variable: 'TRIVY_TOKEN')]) {
                 sh """
                     export TRIVY_AUTH_URL="https://ghcr.io"
                     export TRIVY_TOKEN="$TRIVY_TOKEN"
