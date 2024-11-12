@@ -33,8 +33,8 @@ pipeline {
         stage('Build & UT') {
             steps {
                 sh 'chmod +x mvnw'
-                // sh './mvnw clean package'
-                sh './mvnw install -DskipTests=true'
+                sh './mvnw clean package'
+            // sh './mvnw install -DskipTests=true'
             }
         }
 /******************************************************************************
@@ -60,13 +60,6 @@ pipeline {
                         withAWS(credentials: 'AWS-user', region: 'ap-southeast-2') {
                             s3Upload(bucket: 'jenkins-analysis-reports', path:"jenkins/${GIT_COMMIT}/dependency-check.xml",  file: 'dependency-check-report.xml')
                         }
-
-                        script {
-                            // waitForQualityGate abortPipeline: true
-                            qualityGate = waitForQualityGate()
-                            currentBuild.result = qualityGate.status == 'OK' ? 'SUCCESS' : 'FAILURE'
-                            sonarStatus = qualityGate.status
-                        }
                     }
                 }
                 stage('Code Scan') {
@@ -75,6 +68,13 @@ pipeline {
                             withSonarQubeEnv('EC2SonarQube') {
                                 sh ' ./mvnw sonar:sonar '
                             }
+                        }
+
+                        script {
+                            // waitForQualityGate abortPipeline: true
+                            qualityGate = waitForQualityGate()
+                            currentBuild.result = qualityGate.status == 'OK' ? 'SUCCESS' : 'FAILURE'
+                            sonarStatus = qualityGate.status
                         }
                     }
                 }
@@ -103,7 +103,7 @@ pipeline {
                 }
             }
         }
-        
+
         stage('Create Docker Hub Repo If not existed') {
             steps {
                 script {
