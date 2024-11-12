@@ -60,6 +60,7 @@ pipeline {
                         withAWS(credentials: 'AWS-user', region: 'ap-southeast-2') {
                             s3Upload(bucket: 'jenkins-analysis-reports', path:"jenkins/${GIT_COMMIT}/dependency-check.xml",  file: 'dependency-check-report.xml')
                         }
+
                     }
                 }
                 stage('Code Scan') {
@@ -68,17 +69,14 @@ pipeline {
                             withSonarQubeEnv('EC2SonarQube') {
                                 sh ' ./mvnw sonar:sonar '
                             }
+                        }
+
+                        script {
+                            // waitForQualityGate abortPipeline: true
                             qualityGate = waitForQualityGate()
                             currentBuild.result = qualityGate.status == 'OK' ? 'SUCCESS' : 'FAILURE'
                             sonarStatus = qualityGate.status
                         }
-
-                        // script {
-                        //     // waitForQualityGate abortPipeline: true
-                        //     qualityGate = waitForQualityGate()
-                        //     currentBuild.result = qualityGate.status == 'OK' ? 'SUCCESS' : 'FAILURE'
-                        //     sonarStatus = qualityGate.status
-                        // }
                     }
                 }
             }
