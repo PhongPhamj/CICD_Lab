@@ -68,14 +68,17 @@ pipeline {
                             withSonarQubeEnv('EC2SonarQube') {
                                 sh ' ./mvnw sonar:sonar '
                             }
-                        }
-
-                        script {
-                            // waitForQualityGate abortPipeline: true
                             qualityGate = waitForQualityGate()
                             currentBuild.result = qualityGate.status == 'OK' ? 'SUCCESS' : 'FAILURE'
                             sonarStatus = qualityGate.status
                         }
+
+                        // script {
+                        //     // waitForQualityGate abortPipeline: true
+                        //     qualityGate = waitForQualityGate()
+                        //     currentBuild.result = qualityGate.status == 'OK' ? 'SUCCESS' : 'FAILURE'
+                        //     sonarStatus = qualityGate.status
+                        // }
                     }
                 }
             }
