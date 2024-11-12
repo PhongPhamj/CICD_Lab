@@ -101,7 +101,7 @@ pipeline {
                 withCredentials([string(credentialsId: 'github-classic-token', variable: 'TRIVY_TOKEN')]) {
                 sh """
                     export TRIVY_AUTH_URL="https://ghcr.io"
-                    export TRIVY_TOKEN="$TRIVY_TOKEN"
+                    export TRIVY_TOKEN='$TRIVY_TOKEN'
                     trivy image --no-progress --exit-code 1 --severity HIGH,CRITICAL -f json -o trivy-report.json ${DOCKER_HUB_USERNAME}/${REPO_NAME}:latest
                 """
                 }
