@@ -11,7 +11,7 @@ pipeline {
         DOCKER_HUB_USERNAME = 'phonqpham'
         DOCKER_HUB_TOKEN = credentials('dockerhub-accesstoken')
         REPO_NAME = 'cicd-lab'
-        SONARQUBE_ANALYSIS_URL = 'http://13.210.206.84:9000/dashboard?id=com.example%3AbackendCICD'
+        SONARQUBE_ANALYSIS_URL = 'http://13.236.123.33:9000/dashboard?id=com.example%3AbackendCICD'
         S3_BASE_URL = 'https://ap-southeast-2.console.aws.amazon.com/s3/buckets/jenkins-analysis-reports?region=ap-southeast-2&bucketType=general&prefix=jenkins/'
     }
 
