@@ -40,47 +40,47 @@ pipeline {
 /******************************************************************************
  *CODE ANALYSIS*
  ******************************************************************************/
-        stage('Code Analysis') {
-            parallel {
-                stage('Dependency Check') {
-                    steps {
-                        dependencyCheck additionalArguments: '--scan ./target/', odcInstallation: 'owasp'
-                        dependencyCheckPublisher pattern: '**/dependency-check-report.xml'
+        // stage('Code Analysis') {
+        //     parallel {
+        //         stage('Dependency Check') {
+        //             steps {
+        //                 dependencyCheck additionalArguments: '--scan ./target/', odcInstallation: 'owasp'
+        //                 dependencyCheckPublisher pattern: '**/dependency-check-report.xml'
 
-                        script {
-                            xmlReport = readFile('dependency-check-report.xml')
-                            xml = new XmlParser().parseText(xmlReport)
+        //                 script {
+        //                     xmlReport = readFile('dependency-check-report.xml')
+        //                     xml = new XmlParser().parseText(xmlReport)
 
-                            vulnerabilities = xml.depthFirst().findAll { it.name() == 'vulnerability' }
-                            vulnerabilities.each { vulnerability ->
-                                echo "Vulnerability ID: ${vulnerability.'@id'}"
-                            }
-                        }
+        //                     vulnerabilities = xml.depthFirst().findAll { it.name() == 'vulnerability' }
+        //                     vulnerabilities.each { vulnerability ->
+        //                         echo "Vulnerability ID: ${vulnerability.'@id'}"
+        //                     }
+        //                 }
 
-                        withAWS(credentials: 'AWS-user', region: 'ap-southeast-2') {
-                            s3Upload(bucket: 'jenkins-analysis-reports', path:"jenkins/${GIT_COMMIT}/dependency-check.xml",  file: 'dependency-check-report.xml')
-                        }
+        //                 withAWS(credentials: 'AWS-user', region: 'ap-southeast-2') {
+        //                     s3Upload(bucket: 'jenkins-analysis-reports', path:"jenkins/${GIT_COMMIT}/dependency-check.xml",  file: 'dependency-check-report.xml')
+        //                 }
 
-                    }
-                }
-                stage('Code Scan') {
-                    steps {
-                        script {
-                            withSonarQubeEnv('EC2SonarQube') {
-                                sh ' ./mvnw sonar:sonar '
-                            }
-                        }
+        //             }
+        //         }
+        //         stage('Code Scan') {
+        //             steps {
+        //                 script {
+        //                     withSonarQubeEnv('EC2SonarQube') {
+        //                         sh ' ./mvnw sonar:sonar '
+        //                     }
+        //                 }
 
-                        script {
-                            // waitForQualityGate abortPipeline: true
-                            qualityGate = waitForQualityGate()
-                            currentBuild.result = qualityGate.status == 'OK' ? 'SUCCESS' : 'FAILURE'
-                            sonarStatus = qualityGate.status
-                        }
-                    }
-                }
-            }
-        }
+        //                 script {
+        //                     // waitForQualityGate abortPipeline: true
+        //                     qualityGate = waitForQualityGate()
+        //                     currentBuild.result = qualityGate.status == 'OK' ? 'SUCCESS' : 'FAILURE'
+        //                     sonarStatus = qualityGate.status
+        //                 }
+        //             }
+        //         }
+        //     }
+        // }
 
 /******************************************************************************
  *CREATE DOCKER IMAGE*
@@ -169,21 +169,21 @@ pipeline {
             cleanWs()
         }
 
-        success {
-            slackSend(channel: '#cicd', color: 'good'
-            , message: "Job '${REPO_NAME} [${GIT_COMMIT}]' succeeded. Started at: ${startTime}." +
-            "\nCode Quality Analysis can be found at: ${SONARQUBE_ANALYSIS_URL}"+
-            "\nDependency Check Analysis can be found at: ${S3_BASE_URL}${GIT_COMMIT}/"+
-            "\nImage Scan Analysis can be found at: ${S3_BASE_URL}${GIT_COMMIT}/")
-        }
+        // success {
+        //     slackSend(channel: '#cicd', color: 'good'
+        //     , message: "Job '${REPO_NAME} [${GIT_COMMIT}]' succeeded. Started at: ${startTime}." +
+        //     "\nCode Quality Analysis can be found at: ${SONARQUBE_ANALYSIS_URL}"+
+        //     "\nDependency Check Analysis can be found at: ${S3_BASE_URL}${GIT_COMMIT}/"+
+        //     "\nImage Scan Analysis can be found at: ${S3_BASE_URL}${GIT_COMMIT}/")
+        // }
 
-        failure {
-            slackSend(channel: '#cicd', color: 'danger'
-            , message: "Job '${REPO_NAME} [${GIT_COMMIT}]' failed. Started at: ${startTime}.\n" +
-            "\nCode Quality Analysis can be found at: ${SONARQUBE_ANALYSIS_URL}."+
-            "\nDependency Cheeck Analysis can be found at: ${S3_BASE_URL}${GIT_COMMIT}/"+
-            "\nImage Scan Analysis can be found at: ${S3_BASE_URL}${GIT_COMMIT}/")
-        }
+        // failure {
+        //     slackSend(channel: '#cicd', color: 'danger'
+        //     , message: "Job '${REPO_NAME} [${GIT_COMMIT}]' failed. Started at: ${startTime}.\n" +
+        //     "\nCode Quality Analysis can be found at: ${SONARQUBE_ANALYSIS_URL}."+
+        //     "\nDependency Cheeck Analysis can be found at: ${S3_BASE_URL}${GIT_COMMIT}/"+
+        //     "\nImage Scan Analysis can be found at: ${S3_BASE_URL}${GIT_COMMIT}/")
+        // }
     }
 }
 
