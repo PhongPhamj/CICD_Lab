@@ -102,7 +102,7 @@ pipeline {
                 sh '''
                     export TRIVY_AUTH_URL="https://ghcr.io"
                     export TRIVY_TOKEN=$TRIVY_TOKEN
-                    echo "TRIVY_TOKEN"
+                    echo "$TRIVY_TOKEN"
                     trivy image --no-progress --exit-code 1 --severity HIGH,CRITICAL -f json -o trivy-report.json $DOCKER_HUB_USERNAME/$REPO_NAME:latest
                 '''
                 }
