@@ -102,7 +102,6 @@ pipeline {
                 sh '''
                     export TRIVY_AUTH_URL="https://ghcr.io"
                     export TRIVY_TOKEN=$TRIVY_TOKEN
-                    echo "$TRIVY_TOKEN"
                     trivy image --no-progress --exit-code 1 --severity HIGH,CRITICAL -f json -o trivy-report.json $DOCKER_HUB_USERNAME/$REPO_NAME:latest
                 '''
                 }
@@ -158,7 +157,7 @@ pipeline {
                     withDockerRegistry(credentialsId: 'docker-credentials', toolName: 'jenkins-docker') {
                         sh "docker push ${DOCKER_HUB_USERNAME}/${REPO_NAME}:latest"
                         sh "docker push ${DOCKER_HUB_USERNAME}/${REPO_NAME}:${GIT_COMMIT}"
-                        sh 'docker system prune --all'
+                        sh 'docker system prune --all -f'
                     }
                 }
             }
