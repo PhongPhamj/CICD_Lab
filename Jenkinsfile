@@ -98,13 +98,16 @@ pipeline {
         }
         stage('Scan Image') {
             steps {
-                withCredentials([string(credentialsId: 'github-classic-token', variable: 'TRIVY_TOKEN')]) {
+                // withCredentials([string(credentialsId: 'github-classic-token', variable: 'TRIVY_TOKEN')]) {
+                // sh '''
+                //     export TRIVY_AUTH_URL="https://ghcr.io"
+                //     export TRIVY_TOKEN=$TRIVY_TOKEN
+                //     trivy image --no-progress --exit-code 1 --severity HIGH,CRITICAL -f json -o trivy-report.json $DOCKER_HUB_USERNAME/$REPO_NAME:latest
+                // '''
+                // }
                 sh '''
-                    export TRIVY_AUTH_URL="https://ghcr.io"
-                    export TRIVY_TOKEN=$TRIVY_TOKEN
                     trivy image --no-progress --exit-code 1 --severity HIGH,CRITICAL -f json -o trivy-report.json $DOCKER_HUB_USERNAME/$REPO_NAME:latest
                 '''
-                }
                 withAWS(credentials: 'AWS-user', region: 'ap-southeast-2') {
                     s3Upload(bucket: 'jenkins-analysis-reports', path:"jenkins/${GIT_COMMIT}/image-scan.json",  file: 'trivy-report.json')
                 }
