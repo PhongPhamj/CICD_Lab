@@ -149,20 +149,19 @@ pipeline {
                             error('Failed to create Docker Hub private repository.')
                         } else {
                             echo "Created repository ${DOCKER_HUB_USERNAME}/${REPO_NAME} on Docker Hub."
-                            makePrivate = sh(
+                            updatePrivacy = sh(
                             script: '''
                                 curl -X PATCH https://hub.docker.com/v2/repositories/$DOCKER_HUB_USERNAME/$REPO_NAME/ \
                                 -H "Authorization: Bearer $DOCKER_HUB_TOKEN" \
                                 -H "Content-Type: application/json" \
-                                -d '{ "is_private": true }'
+                                -d '{ "visibility": "private" }'
                             ''',
                             returnStatus: true
                             )
-
-                            if (makePrivate != 0) {
-                                error('Failed to make Docker Hub repository private.')
+                            if (updatePrivacy != 0) {
+                                error('Failed to update repository privacy to private.')
                             } else {
-                                echo "Repository ${DOCKER_HUB_USERNAME}/${REPO_NAME} is now private on Docker Hub."
+                                echo "Successfully set repository ${DOCKER_HUB_USERNAME}/${REPO_NAME} to private."
                             }
                         }
                     }else {
