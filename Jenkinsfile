@@ -104,7 +104,7 @@ pipeline {
                 // '''
                 // }
                 sh '''
-                    trivy image --no-progress --exit-code 1 --severity HIGH,CRITICAL -f json -o trivy-report.json $DOCKER_HUB_USERNAME/$REPO_NAME:latest
+                    trivy image --db-repository ghcr.io/aquasecurity/trivy-db:2,public.ecr.aws/aquasecurity/trivy-db:2 --no-progress --exit-code 1 --severity HIGH,CRITICAL -f json -o trivy-report.json $DOCKER_HUB_USERNAME/$REPO_NAME:latest
                 '''
                 // sh '''
                 //     trivy image --no-progress -f json -o trivy-report.json $DOCKER_HUB_USERNAME/$REPO_NAME:latest
