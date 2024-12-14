@@ -8,7 +8,7 @@ import java.util.List;
 import java.util.Optional;
 
 @RestController
-@RequestMapping("/welcome")
+@RequestMapping("/")
 public class HelloWorldController {
     @GetMapping
     public String Welcome(){
