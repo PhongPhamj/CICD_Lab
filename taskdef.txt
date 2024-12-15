@@ -1,0 +1,69 @@
+// {
+//     "containerDefinitions": [
+//         {
+//             "name": "container",
+//             "image": "public.ecr.aws/n3a0l4k6/phonqpvt-be-demo-cdklab",
+//             "cpu": 0,
+//             "memory": 2048,
+//             "links": [],
+//             "portMappings": [
+//                 {
+//                     "containerPort": 8080,
+//                     "hostPort": 8080,
+//                     "protocol": "tcp"
+//                 }
+//             ],
+//             "essential": true,
+//             "entryPoint": [],
+//             "command": [],
+//             "environment": [],
+//             "environmentFiles": [],
+//             "mountPoints": [],
+//             "volumesFrom": [],
+//             "secrets": [],
+//             "dnsServers": [],
+//             "dnsSearchDomains": [],
+//             "extraHosts": [],
+//             "dockerSecurityOptions": [],
+//             "dockerLabels": {},
+//             "ulimits": [],
+//             "systemControls": [],
+//             "credentialSpecs": []
+//         }
+//     ],
+//     "family": "task",
+//     "taskRoleArn": "arn:aws:iam::851725403398:role/backend-ECS-stack-taskTaskRole99C98141-8KrRS7vJ13n4",
+//     "networkMode": "awsvpc",
+//     "revision": 16,
+//     "volumes": [],
+//     "status": "ACTIVE",
+//     "requiresAttributes": [
+//         {
+//             "name": "com.amazonaws.ecs.capability.docker-remote-api.1.17"
+//         },
+//         {
+//             "name": "com.amazonaws.ecs.capability.task-iam-role"
+//         },
+//         {
+//             "name": "com.amazonaws.ecs.capability.docker-remote-api.1.18"
+//         },
+//         {
+//             "name": "ecs.capability.task-eni"
+//         }
+//     ],
+//     "placementConstraints": [],
+//     "compatibilities": [
+//         "EC2",
+//         "FARGATE"
+//     ],
+//     "requiresCompatibilities": [
+//         "EC2",
+//         "FARGATE"
+//     ],
+//     "cpu": "1024",
+//     "memory": "2048",
+//     "registeredAt": "2024-12-15T08:51:32.080Z",
+//     "registeredBy": "arn:aws:sts::851725403398:assumed-role/cdk-hnb659fds-cfn-exec-role-851725403398-ap-southeast-1/AWSCloudFormation",
+//     "enableFaultInjection": false,
+//     "tags": []
+// }
