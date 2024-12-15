@@ -1,0 +1,46 @@
+{
+    "family": "task",
+    "containerDefinitions": [
+        {
+            "name": "container",
+            "image": "public.ecr.aws/n3a0l4k6/phonqpvt-be-demo-cdklab",
+            "cpu": 0,
+            "memory": 2048,
+            "links": [],
+            "portMappings": [
+                {
+                    "containerPort": 8080,
+                    "hostPort": 8080,
+                    "protocol": "tcp"
+                }
+            ],
+            "essential": true,
+            "entryPoint": [],
+            "command": [],
+            "environment": [],
+            "environmentFiles": [],
+            "mountPoints": [],
+            "volumesFrom": [],
+            "secrets": [],
+            "dnsServers": [],
+            "dnsSearchDomains": [],
+            "extraHosts": [],
+            "dockerSecurityOptions": [],
+            "dockerLabels": {},
+            "ulimits": [],
+            "systemControls": [],
+            "credentialSpecs": []
+        }
+    ],
+    "taskRoleArn": "arn:aws:iam::851725403398:role/backend-ECS-stack-taskTaskRole99C98141-8KrRS7vJ13n4",
+    "networkMode": "awsvpc",
+    "volumes": [],
+    "placementConstraints": [],
+    "requiresCompatibilities": [
+        "EC2",
+        "FARGATE"
+    ],
+    "cpu": "1024",
+    "memory": "2048",
+    "enableFaultInjection": false
+}
