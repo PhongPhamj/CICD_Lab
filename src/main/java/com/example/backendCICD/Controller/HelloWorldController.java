@@ -12,7 +12,7 @@ import java.util.Optional;
 public class HelloWorldController {
     @GetMapping
     public String Welcome(){
-        return "Hello World!";
+        return "Hello World! Test BE Pipeline 15/12/2024/ 03:03";
     }
 
     @GetMapping(path = "/contacts")
