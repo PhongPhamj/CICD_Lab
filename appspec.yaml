@@ -1,5 +1,5 @@
 version: 0.0
-Resource:
+Resources:
   - TargetService:
       Type: AWS:ECS::SERVICE
       Properties:
